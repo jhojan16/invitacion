@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta Mágica</title>
+
+<style>
+    body {
+        font-family: "Cinzel", serif;
+        background: radial-gradient(circle, #0a0013, #000);
+        color: #e8dcb9;
+        text-align: center;
+        padding: 25px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    h1, h2, h3, p {
+        text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    .view { display: none; animation: fadeIn 1.2s ease-in-out; }
+    .active { display: block; }
+
+    /* CARTA PERGAMINO */
+    .scroll {
+        width: 90%;
+        max-width: 380px;
+        margin: 25px auto;
+        padding: 25px;
+        background: #f4e8c1;
+        color: #3b2f18;
+        border-radius: 10px;
+        position: relative;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 19px;
+        box-shadow: 0 0 12px rgba(255,255,255,0.3), inset 0 0 12px rgba(0,0,0,0.4);
+    }
+
+    /* DISEÑO PREMIUM DEL TICKET */
+    .ticket {
+        width: 90%;
+        max-width: 360px;
+        background: linear-gradient(135deg, #1b0024, #35004b, #1b0024);
+        color: #f9e6ff;
+        padding: 25px;
+        border-radius: 18px;
+        margin: 25px auto;
+        border: 2px dashed rgba(255,255,255,0.35);
+        box-shadow: 0 0 18px rgba(179,0,255,0.7), inset 0 0 18px rgba(90,0,120,0.6);
+        position: relative;
+        overflow: hidden;
+        animation: glowTicket 2s infinite alternate ease-in-out;
+    }
+
+    @keyframes glowTicket {
+        from { box-shadow: 0 0 14px rgba(160,0,255,0.5); }
+        to { box-shadow: 0 0 25px rgba(210,0,255,0.9); }
+    }
+
+    .ticket::before, .ticket::after {
+        content: "✨";
+        position: absolute;
+        font-size: 20px;
+        opacity: 0.7;
+        animation: floatMagic 3s infinite alternate ease-in-out;
+    }
+
+    .ticket::before { top: 8px; left: 10px; }
+    .ticket::after { bottom: 8px; right: 10px; }
+
+    @keyframes floatMagic {
+        from { transform: translateY(-3px); opacity: .6; }
+        to { transform: translateY(3px); opacity: 1; }
+    }
+
+    /* INPUT & BOTÓN */
+    input {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+        text-align: center;
+    }
+    button {
+        background: #7a051d;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: .3s;
+    }
+    button:hover {
+        transform: scale(1.1);
+        background: #b70f33;
+    }
+
+    /* EFECTO MAGIA TIPO PATRONUS */
+    .spark {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(173,216,255,0.85);
+        box-shadow: 0 0 10px rgba(120,190,255,0.9);
+        animation: patronus 2.8s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes patronus {
+        from { transform: translateY(0) scale(1); opacity: 1; }
+        to { transform: translateY(-120vh) scale(.3); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+<body>
+
+<!-- Vista 1 -->
+<div id="view1" class="view active">
+    <h1>🪄 Carta Mágica 🪄</h1>
+    <div class="scroll">
+        <p>Aquella persona que lea esta carta, deberá probar si posee la magia suficiente para continuar...</p>
+        <p>Solo quienes confían en lo imposible podrán ver su destino revelado.</p>
+        <p>Para continuar, deberás escribir la palabra secreta 🗝</p>
+        <input type="text" id="codigo" placeholder="Escribe el código">
+        <button onclick="validarCodigo()">Desbloquear</button>
+        <p id="error" style="color:#ff244d; display:none;">Código incorrecto ❌</p>
+    </div>
+</div>
+
+<!-- Vista 2 -->
+<div id="view2" class="view">
+    <h2>✨ Has demostrado tu magia ✨</h2>
+
+    <div class="ticket">
+        <h3 style="margin-bottom:6px;">🎟 ENTRADA VIP 🎟</h3>
+        <p><strong>Película:</strong> Los Ilusionistas 3</p>
+        <p><strong>Fecha:</strong> 19 • Noviembre</p>
+        <p><strong>Hora:</strong> 6:00 PM</p>
+        <p><strong>Compañía:</strong> Juntos bajo un hechizo ✨</p>
+        <p><strong>Regalo:</strong> Un vínculo mágico eterno 💖</p>
+    </div>
+
+    <p style="font-size:20px;">¿Me acompañas en esta ilusión? 💖</p>
+
+    <button onclick="whatsapp('Sí 🥰')">Sí ✨</button>
+    <button onclick="whatsapp('Obvio 😘')">Obvio 🔮</button>
+</div>
+
+<script>
+const codigoCorrecto = "magia";
+const telefono = "573165085085";
+
+function validarCodigo() {
+    const codigoIngresado = document.getElementById("codigo").value.toLowerCase().trim();
+    if(codigoIngresado === codigoCorrecto) {
+        document.getElementById("view1").classList.remove("active");
+        document.getElementById("view2").classList.add("active");
+        lanzarPatronus();
+    } else {
+        document.getElementById("error").style.display = "block";
+    }
+}
+
+function whatsapp(respuesta) {
+    let mensaje = encodeURIComponent(`¡He aceptado la invitación al cine! ${respuesta} 💞`);
+    window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
+}
+
+function lanzarPatronus() {
+    setInterval(() => {
+        let spark = document.createElement("div");
+        spark.classList.add("spark");
+        spark.style.left = Math.random() * 100 + "vw";
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 3000);
+    }, 150);
+}
+</script>
+
+</body>
+</html>
